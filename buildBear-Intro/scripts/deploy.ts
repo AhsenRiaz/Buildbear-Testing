@@ -1,18 +1,17 @@
-import { ethers } from "hardhat";
+const hre = require("hardhat");
 
 async function main() {
-  // helloWorld is a factory for instances of our hello world contract
-  const HelloWorld = await ethers.getContractFactory("HelloWorld");
+  const Staking = await hre.ethers.getContractFactory("Staking");
+  const staking = await Staking.deploy({
+    value: ethers.utils.parseEther("10"),
+  });
 
-  // deploy() will strat the deployment and will return a Promise that resolves to a Contract object
-  const helloWorld = await HelloWorld.deploy("Hello World!");
-  console.log("Contract deployed to address:", helloWorld.address);
+  await staking.deployed();
+
+  console.log("Staking contract deployed to:", staking.address);
 }
 
-// ensures the code is clean
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
